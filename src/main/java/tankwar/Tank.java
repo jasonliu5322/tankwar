@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 public class Tank {
     private int x;
     private int y;
+    private boolean enemy;
     private Direction direction;
 
     public int getX() {
@@ -26,8 +27,13 @@ public class Tank {
     }
 
     public Tank(int x, int y, Direction direction) {
+        this(x, y, false, direction);
+    }
+
+    public Tank(int x, int y, boolean enemy, Direction direction) {
         this.x = x;
         this.y = y;
+        this.enemy = enemy;
         this.direction = direction;
     }
 
@@ -56,23 +62,24 @@ public class Tank {
     }
 
     Image getImage(){
+        String prefix = enemy? "e" : "";
         switch(direction){
             case UP:
-                return new ImageIcon("assets/images/tankU.gif").getImage();
+                return new ImageIcon("assets/images/" + prefix + "tankU.gif").getImage();
             case UPLEFT:
-                return new ImageIcon("assets/images/tankLU.gif").getImage();
+                return new ImageIcon("assets/images/" + prefix + "tankLU.gif").getImage();
             case UPRIGHT:
-                return new ImageIcon("assets/images/tankRU.gif").getImage();
+                return new ImageIcon("assets/images/" + prefix + "tankRU.gif").getImage();
             case DOWN:
-                return new ImageIcon("assets/images/tankD.gif").getImage();
+                return new ImageIcon("assets/images/" + prefix + "tankD.gif").getImage();
             case DOWNLEFT:
-                return new ImageIcon("assets/images/tankLD.gif").getImage();
+                return new ImageIcon("assets/images/" + prefix + "tankLD.gif").getImage();
             case DOWNRIGHT:
-                return new ImageIcon("assets/images/tankRD.gif").getImage();
+                return new ImageIcon("assets/images/" + prefix + "tankRD.gif").getImage();
             case LEFT:
-                return new ImageIcon("assets/images/tankL.gif").getImage();
+                return new ImageIcon("assets/images/" + prefix + "tankL.gif").getImage();
             case RIGHT:
-                return new ImageIcon("assets/images/tankR.gif").getImage();
+                return new ImageIcon("assets/images/" + prefix + "tankR.gif").getImage();
         }
         return null;
     }
