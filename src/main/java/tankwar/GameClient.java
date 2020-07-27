@@ -11,10 +11,23 @@ import java.util.List;
 
 public class GameClient extends JComponent {
 
+    private static final GameClient INSTANCE = new GameClient();
+
+    public static GameClient getInstance(){
+        return INSTANCE;
+    }
+
     private Tank playerTank;
     private List<Tank> enemyTanks;
     private List<Wall> wall;
 
+    public List<Tank> getEnemyTanks() {
+        return enemyTanks;
+    }
+
+    public List<Wall> getWall() {
+        return wall;
+    }
 
     public GameClient(){
         this.playerTank = new Tank(400, 100, Direction.DOWN);

@@ -1,30 +1,14 @@
 package tankwar;
 
-import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public class Tank {
     private int x;
     private int y;
-    private boolean enemy;
+    private final boolean enemy;
     private Direction direction;
-
-    public int getX() {
-        return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
 
     public Tank(int x, int y, Direction direction) {
         this(x, y, false, direction);
@@ -85,6 +69,7 @@ public class Tank {
     }
 
     void draw(Graphics g){
+        int oldX = x, oldY = y;
         this.determineDirection();
         this.move();
         if(x < 0){
@@ -98,7 +83,31 @@ public class Tank {
             y = 600 - this.getImage().getHeight(null);
         }
 
+        Rectangle rec = this.getRectangle();
+        for(Wall wall: GameClient.getInstance().getWall()){
+            if(rec.intersects(wall.getRectangle())){
+                x = oldX;
+                y = oldY;
+                break;
+            }
+
+        }
+
+        for(Tank tank : GameClient.getInstance().getEnemyTanks()){
+            if(rec.intersects(tank.getRectangle())){
+                x = oldX;
+                y = oldY;
+                break;
+            }
+        }
+
+
+
         g.drawImage(this.getImage(), this.x, this.y, null);
+    }
+
+    public Rectangle getRectangle(){
+        return new Rectangle(x, y, getImage().getWidth(null), getImage().getHeight(null));
     }
 
     private boolean up, down, left, right;
