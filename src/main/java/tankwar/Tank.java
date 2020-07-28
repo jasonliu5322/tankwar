@@ -125,7 +125,16 @@ public class Tank {
             case KeyEvent.VK_RIGHT:
                 right = true;
                 break;
+            case KeyEvent.VK_CONTROL:
+                fire();
+                break;
         }
+    }
+
+    private void fire() {
+        Missile missile = new Missile(x + getImage().getWidth(null)/2 - 6,
+                y + getImage().getHeight(null)/2 - 6, enemy, direction);
+        GameClient.getInstance().getMissiles().add(missile);
     }
 
     private boolean stopped;
