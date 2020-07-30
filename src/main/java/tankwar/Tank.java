@@ -10,6 +10,7 @@ import java.io.File;
 import java.util.Random;
 
 public class Tank {
+    private static final int SPEED = 5;
     private int x;
     private int y;
     private final boolean enemy;
@@ -30,24 +31,9 @@ public class Tank {
         if(stopped){
             return;
         }
-        switch(direction){
-            case UP: y -= 5;
-            break;
-            case LEFT_UP: y -= 5; x -=5;
-            break;
-            case RIGHT_UP: y -= 5; x +=5;
-            break;
-            case DOWN: y += 5;
-            break;
-            case LEFT_DOWN: y += 5; x -=5;
-            break;
-            case RIGHT_DOWN: y += 5; x+=5;
-            break;
-            case LEFT: x -= 5;
-            break;
-            case RIGHT: x += 5;
-            break;
-        }
+        x += direction.xFactor * SPEED;
+        y += direction.yFactor * SPEED;
+
     }
 
     Image getImage(){
