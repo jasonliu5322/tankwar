@@ -1,12 +1,8 @@
 package tankwar;
 
 
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.io.File;
 import java.util.Random;
 
 public class Tank {
@@ -133,20 +129,14 @@ public class Tank {
         }
 
         String audioFile = new Random().nextBoolean()?"supershoot.aiff":"supershoot.wav";
-        playAudio(audioFile);
+        Tools.playAudio(audioFile);
     }
 
     private void fire() {
         Missile missile = new Missile(x + getImage().getWidth(null)/2 - 6,
                 y + getImage().getHeight(null)/2 - 6, enemy, direction);
         GameClient.getInstance().getMissiles().add(missile);
-        playAudio("shoot.wav");
-    }
-
-    private void playAudio(String fileName) {
-        Media sound = new Media(new File("assets/audios/" + fileName).toURI().toString());
-        MediaPlayer mediaPlayer = new MediaPlayer(sound);
-        mediaPlayer.play();
+        Tools.playAudio("shoot.wav");
     }
 
     private boolean stopped;
