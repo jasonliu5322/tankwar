@@ -13,6 +13,8 @@ public class Tank {
     private static final int SPEED = 5;
     private int x;
     private int y;
+    private boolean live = true;
+    private int hp = 100;
     private final boolean enemy;
     private Direction direction;
 
@@ -25,6 +27,26 @@ public class Tank {
         this.y = y;
         this.enemy = enemy;
         this.direction = direction;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public void setHp(int hp) {
+        this.hp = hp;
+    }
+
+    boolean isLive() {
+        return live;
+    }
+
+    void setLive(boolean live) {
+        this.live = live;
+    }
+
+    boolean isEnemy() {
+        return enemy;
     }
 
     void move(){
@@ -64,9 +86,7 @@ public class Tank {
                 y = oldY;
                 break;
             }
-
         }
-
         for(Tank tank : GameClient.getInstance().getEnemyTanks()){
             if(rec.intersects(tank.getRectangle())){
                 x = oldX;
@@ -74,9 +94,6 @@ public class Tank {
                 break;
             }
         }
-
-
-
         g.drawImage(this.getImage(), this.x, this.y, null);
     }
 
