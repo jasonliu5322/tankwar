@@ -148,7 +148,7 @@ public class Tank {
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_UP:
-                code |= Direction.UP.code;//https://www.w3schools.com/java/java_operators.asp
+                code ^= Direction.UP.code;//https://www.w3schools.com/java/java_operators.asp
                 break;          // |(OR) - Sets each bit to 1 if any of the two bits is 1
             case KeyEvent.VK_DOWN:
                 code |= Direction.DOWN.code;
