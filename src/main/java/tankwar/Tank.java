@@ -6,16 +6,25 @@ import java.awt.event.KeyEvent;
 import java.util.Random;
 
 public class Tank {
+    Save.Position getPosition(){
+        return new Save.Position(x, y, direction);
+    }
+
     private static final int SPEED = 5;
     private int x;
     private int y;
     private boolean live = true;
-    private int hp = 100;
+    private static final int MAX_HP = 100;
+    private int hp = MAX_HP;
     private final boolean enemy;
     private Direction direction;
 
     public Tank(int x, int y, Direction direction) {
         this(x, y, false, direction);
+    }
+
+    Tank(Save.Position position, boolean enemy){
+        this(position.getX(), position.getY(), enemy, position.getDirection());
     }
 
     public Tank(int x, int y, boolean enemy, Direction direction) {
@@ -60,6 +69,10 @@ public class Tank {
 
     }
 
+    boolean isDying(){
+        return this.hp <= MAX_HP * 0.2;
+    }
+
     void draw(Graphics g){
         int oldX = x, oldY = y;
         if(!this.enemy) {
@@ -97,38 +110,56 @@ public class Tank {
             x = oldX;
             y = oldY;
         }
+
         if(!enemy){
+            Blood blood = GameClient.getInstance().getBlood();
+            if(blood.isLive() && rec.intersects(blood.getRectangle())){
+                    this.hp = MAX_HP;
+                    Tools.playAudio("revive.wav");
+                    blood.setLive(false);
+            }
             g.setColor(Color.WHITE);
             g.fillRect(x, y - 10, this.getImage().getWidth(null), 10);
-
             g.setColor(Color.RED);
-            int width = hp * this.getImage().getWidth(null) / 100;
+            int width = hp * this.getImage().getWidth(null) / MAX_HP;
             g.fillRect(x, y - 10, width, 10);
+
+            Image petImage = Tools.getImage("pet-camel.gif");
+            g.drawImage(petImage, this.x - petImage.getWidth(null) - DISTANCE_TO_PET, this.y,null);
         }
 
         g.drawImage(this.getImage(), this.x, this.y, null);
     }
 
+    private static final int DISTANCE_TO_PET = 4;
     public Rectangle getRectangle(){
+        if(enemy) {
+            return new Rectangle(x, y, getImage().getWidth(null), getImage().getHeight(null));
+        }else{
+            Image petImage = Tools.getImage("pet-camel.gif");
+            int delta = petImage.getWidth(null) + DISTANCE_TO_PET;
+            return new Rectangle(x - delta, y, getImage().getWidth(null) + delta, getImage().getHeight(null));
+            }
+        }
+    public Rectangle getRectangleForHitDetection(){
         return new Rectangle(x, y, getImage().getWidth(null), getImage().getHeight(null));
     }
 
-    private boolean up, down, left, right;
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_UP:
-                up = true;
-                break;
+                code |= Direction.UP.code;//https://www.w3schools.com/java/java_operators.asp
+                break;          // |(OR) - Sets each bit to 1 if any of the two bits is 1
             case KeyEvent.VK_DOWN:
-                down = true;
+                code |= Direction.DOWN.code;
                 break;
             case KeyEvent.VK_LEFT:
-                left = true;
+                code |= Direction.LEFT.code;
                 break;
             case KeyEvent.VK_RIGHT:
-                right = true;
+                code |= Direction.RIGHT.code;
                 break;
-            case KeyEvent.VK_CONTROL:
+            case KeyEvent.VK_SPACE:
                 fire();
                 break;
             case KeyEvent.VK_A:
@@ -159,27 +190,13 @@ public class Tank {
     }
 
     private boolean stopped;
+    private int code;
     private void determineDirection() {
-        if (!up && !left && !down & !right) {
+        Direction newDirection = Direction.get(code);
+        if(newDirection == null){
             this.stopped = true;
-        } else {
-            if (up && left && !down & !right) {
-                this.direction = Direction.LEFT_UP;
-            } else if (up && !left && !down & right) {
-                this.direction = Direction.RIGHT_UP;
-            } else if (up && !left && !down & !right) {
-                this.direction = Direction.UP;
-            } else if (!up && !left && down & !right) {
-                this.direction = Direction.DOWN;
-            } else if (!up && left && down & !right) {
-                this.direction = Direction.LEFT_DOWN;
-            } else if (!up && !left && down & right) {
-                this.direction = Direction.RIGHT_DOWN;
-            } else if (!up && left && !down & !right) {
-                this.direction = Direction.LEFT;
-            } else if (!up && !left && !down & right) {
-                this.direction = Direction.RIGHT;
-            }
+        }else{
+            this.direction = newDirection;
             this.stopped = false;
         }
     }
@@ -187,19 +204,18 @@ public class Tank {
     public void keyReleased(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_UP:
-                up = false;
-                break;
+                code ^= Direction.UP.code; //Java Bitwise Operators
+                break;                     //^(XOR) - Sets each bit to 1 if only one of the two bits is 1
             case KeyEvent.VK_DOWN:
-                down = false;
+                code ^= Direction.DOWN.code;
                 break;
             case KeyEvent.VK_LEFT:
-                left = false;
+                code ^= Direction.LEFT.code;
                 break;
             case KeyEvent.VK_RIGHT:
-                right = false;
+                code ^= Direction.RIGHT.code;
                 break;
         }
-
     }
     private final Random random = new Random();
     private int step = random.nextInt(12) + 3;
