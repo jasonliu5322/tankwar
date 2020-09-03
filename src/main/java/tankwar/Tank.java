@@ -145,6 +145,7 @@ public class Tank {
         return new Rectangle(x, y, getImage().getWidth(null), getImage().getHeight(null));
     }
 
+
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_UP:

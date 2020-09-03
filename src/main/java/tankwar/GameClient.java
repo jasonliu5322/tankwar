@@ -47,7 +47,6 @@ public class GameClient extends JComponent {
     public List<Missile> getMissiles() {
         return missiles;
     }
-
     public List<Tank> getEnemyTanks() {
         return enemyTanks;
     }
