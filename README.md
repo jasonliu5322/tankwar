@@ -1,9 +1,6 @@
 # Project: tankwar
 ![Image of example](assets/images/udemy-course.jpg)
 
-![4ds4jw](https://user-images.githubusercontent.com/49930347/92187624-26bc0d80-ee0f-11ea-91f4-56284164a125.gif)
-
-
 Using OOP concepts in Java programming language to implement a new version Tank War.
 
 ### Development Environment
